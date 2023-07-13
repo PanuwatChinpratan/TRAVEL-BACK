@@ -53,13 +53,16 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET_KEY,
       { expiresIn: "15d" }
     );
-
+    
+    const expiresIn = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000); 
+  
     res.cookie("accessToken", token, {
         httpOnly: true,
-        expires: token.expiresIn,
+        expires: expiresIn,
       })
       .status(200)
       .json({ token, data: { ...rest }, role });
+    
   } catch (err) {
     res.status(500).json({ success: false, massage: "Fail login" });
   }
