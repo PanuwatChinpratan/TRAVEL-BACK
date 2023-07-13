@@ -1,8 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import auth from "../utils/verifyToken.js";
 
-// ฟังก์ชัน register
 export const register = async (req, res) => {
   try {
     const salt = bcrypt.genSaltSync(10);
@@ -47,22 +46,16 @@ export const login = async (req, res) => {
     }
 
     const { password, role, ...rest } = user._doc;
-    
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET_KEY,
-      { expiresIn: "15d" }
-    );
-    
-    const expiresIn = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000); 
-  
+
+    const token = auth.generateToken({ id: user._id, role: user.role });
+
+    const expiresIn = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+
     res.cookie("accessToken", token, {
-        httpOnly: true,
-        expires: expiresIn,
-      })
-      .status(200)
-      .json({ token, data: { ...rest }, role });
-    
+      httpOnly: true,
+      expires: expiresIn,
+    }).status(200).json({ token, data: { ...rest }, role });
+
   } catch (err) {
     res.status(500).json({ success: false, massage: "Fail login" });
   }
