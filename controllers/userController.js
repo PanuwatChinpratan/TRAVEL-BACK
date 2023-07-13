@@ -22,7 +22,7 @@ export const createUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   const id = req.params.id;
   try {
-    const updateUser = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       id,
       {
         $set: req.body,
@@ -32,12 +32,13 @@ export const updateUser = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Successfully updated",
-      data: updateUser,
+      data: updatedUser,
     });
   } catch (err) {
     res.status(500).json({
-      success: true,
-      message: "failed to updated",
+      success: false,
+      message: "Failed to update User",
+      error: err.message,
     });
   }
 };
@@ -72,7 +73,7 @@ export const getSingleUser = async (req, res) => {
   const id = req.params.id;
   try {
     const user = await User.findById(id);
-    if (!User) {
+    if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
@@ -110,3 +111,11 @@ export const getAllUser = async (req, res) => {
     });
   }
 };
+
+export default {
+  createUser,
+  updateUser,
+  deleteUser,
+  getSingleUser,
+  getAllUser,
+}
