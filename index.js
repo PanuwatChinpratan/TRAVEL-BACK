@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8000;
 const corsOptions = {
-  origin: ["https://travel-front-henna.vercel.app/home"],
+  origin: ["https://travel-front-henna.vercel.app"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 };
